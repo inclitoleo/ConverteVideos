@@ -1,21 +1,19 @@
-ESPERANZA Conversor de vídeos
+# ESPERANZA Video Converter
 
-Este script tem o objetivo de auxiliar na conversao de um video para outros formatos especificados no script.
+This script is intended to help convert a video into other formats specified in the script.  
 
-Nao nos resposabilizamos por danos causados nos videos convertidos
+We are not responsible for any damage caused to the converted videos.  
 
-E utilizado para a conversao dos videos o ffmpeg, base Fedora Core 23. Nao foram feitos testes em versoes anteriores do Fedore Core.
+The script uses **ffmpeg**, based on Fedora Core 23. No tests have been performed on earlier versions of Fedora Core.  
 
-A adapacao do script e livre, mas que os creditos sejam dados ao criador do mesmo.
+The script can be freely adapted, as long as proper credit is given to the creator.  
 
-Aqueles que se interessarem em fazer melhorias, favor mandar o script corrido para lccoder.php@gmail.com, os creditos serao dados ao criador das mudancas e colocado no github.
+Those interested in making improvements, please send the updated script to **lccoder.php@gmail.com**. Credits will be given to the author of the changes, and the script will be uploaded to GitHub.  
 
-Atualmente o esperanza comporta mudanca apenas para o formato mp4
+Currently, Esperanza only supports conversion to the **mp4** format.  
 
-Modo de utilizar:
+## Usage
 
-De permissao 755 no script: chmod 755 esperanza copie para /usr/local/sbin
-
-esperanza fileOld.ext fileNew
-
-Ele ja converte o arquivo antigo de qualquer extensao para o formato mp4. Nao precisa colocar a extensao no nome do arquivo novo.
+Give permission 755 to the script:
+```bash
+chmod 755 esperanza
