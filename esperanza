@@ -1,34 +1,61 @@
 #!/bin/bash
 
 #################################################
-# Script:	esperanza			#
-# Author: 	Leonardo Costa			#
-# Contact:	lccoder.php@gmail.com		#
-# Created:	2015-12-29 01:35:37 AM		#
-# Verion:	1.0				#
+# Script:    esperanza                          #
+# Author:    Leonardo Costa                     #
+# Contact:   lccoder.php@gmail.com              #
+# Created:   2015-12-29 01:35:37 AM             #
+# Version:   2.0                                #
+# Description: Video converter using ffmpeg     #
+# Supports Ubuntu/Debian and Fedora             #
 #################################################
 
-type ffmpeg 2>/dev/null ; test $? -eq 1 && su root -c "dnf install ffmpeg -y"
+# Function to install ffmpeg if missing
+install_ffmpeg() {
+    if type ffmpeg >/dev/null 2>&1; then
+        return
+    fi
 
+    echo "ffmpeg is not installed. Attempting to install..."
 
-if [ ! $1 ] && [ ! $2 ]
-then
-	echo -e "Digite o nome dos dois arquivos, o original e o nome do arquivo de saida sem extensao \n"
-	exit 0
-	
-else
+    if type dnf >/dev/null 2>&1; then
+        su root -c "dnf install ffmpeg -y"
+    elif type apt-get >/dev/null 2>&1; then
+        sudo apt-get update
+        sudo apt-get install ffmpeg -y
+    else
+        echo "Error: Package manager not found. Install ffmpeg manually."
+        exit 1
+    fi
 
-	/usr/bin/ffmpeg -i $1 -strict -2 -vcodec libx264 $2.mp4 2>/dev/null
-	
-	if [ $? -eq 0 ]
-	then
-		echo -e "O arquivo $2.mp4 foi gerado com sucesso!\n"
-		exit 0
-	else
-		echo -e "Houve um erro ao gerar o  arquivo $2.mp4!\n"
-                exit 0
-	fi
+    if ! type ffmpeg >/dev/null 2>&1; then
+        echo "Error: ffmpeg installation failed."
+        exit 1
+    fi
+}
 
+# Install ffmpeg if not present
+install_ffmpeg
+
+# Validate arguments
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: $0 <input_file> <output_file_name> [output_format]"
+    echo "Example: $0 input.avi output mp4"
+    exit 1
 fi
-	
 
+INPUT_FILE="$1"
+OUTPUT_NAME="$2"
+OUTPUT_FORMAT="${3:-mp4}"  # Default format is mp4
+
+# Perform the conversion
+ffmpeg -i "$INPUT_FILE" -c:v libx264 -strict -2 "$OUTPUT_NAME.$OUTPUT_FORMAT"
+
+# Check if conversion succeeded
+if [ $? -eq 0 ]; then
+    echo "The file '$OUTPUT_NAME.$OUTPUT_FORMAT' was successfully generated!"
+    exit 0
+else
+    echo "An error occurred while generating '$OUTPUT_NAME.$OUTPUT_FORMAT'."
+    exit 1
+fi
